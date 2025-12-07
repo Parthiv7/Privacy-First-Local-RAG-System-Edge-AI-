@@ -1,0 +1,10 @@
+# --- Project Specific Files ---
+venv/
+faiss_index/
+
+# --- Standard Files ---
+__pycache__/
+.env
+*.cfg
+*.ini
+.DS_Store
