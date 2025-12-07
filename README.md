@@ -1,83 +1,76 @@
-# **Project Title**
-
-
 
 ## **Privacy-First Local RAG System (Edge AI)**
+![Status: Working](https://img.shields.io/badge/Status-Working-brightgreen)
+![License: MIT](https://img.shields.io/badge/License-MIT-blue)
+
+A secure, offline-capable **RAG (Retrieval-Augmented Generation) pipeline** built to analyze financial and legal documents directly on consumer hardware. This project transforms a paid cloud architecture into an **Edge AI solution** by leveraging open-source, local models.
+
+---
+## 📸 Application Demo (Side-by-Side Proof)
+
+<div align="center">
+    <img src="assets/Screenshot 2025-12-07 001937.png" width="48%" alt="Successful Query and Summary Output">
+    &nbsp; &nbsp;
+    <img src="assets/Screenshot 2025-12-07 001803.png" width="48%" alt="Streamlit UI Showing the Sidebar and Initial Query">
+</div>
+
+*The image on the left shows the final, summarized response from Llama 3.2. The image on the right shows the architecture (sidebar) and the question being asked.*
+
+## Key Features & Value Proposition
+
+* **100% Data Privacy (Zero Trust):** The entire pipeline—from embedding to inference—runs locally. No data is ever sent to external APIs (OpenAI/Google), making it ideal for sensitive, zero-trust environments.
+* **Zero-Cost Infrastructure:** Eliminates recurring cloud compute and API usage fees by leveraging local resources instead of paid services.
+* **Edge AI Performance:** Optimized for low-latency retrieval using a streamlined `RetrievalQA` chain and a lightweight, fast **Llama 3.2 (1B)** model.
+* **Interactive UI:** User-friendly chat interface built with **Streamlit** for real-time querying and source citation.
+
+---
+
+## 🛠️ Technical Architecture
+
+| Component | Technology | Role |
+| :--- | :--- | :--- |
+| **Orchestration** | Python / **LangChain** | Manages the RAG sequence (retrieval, context stuffing, generation). |
+| **Inference Engine (Brain)** | **Ollama** | Hosts and serves the LLM locally via API calls. |
+| **Large Language Model (SLM)** | **Llama 3.2 (1B)** | The Small Language Model used for generating responses. |
+| **Vector Database (Memory)** | **FAISS** | Provides high-speed similarity search for efficient context retrieval. |
+| **Embedding Model** | `all-MiniLM-L6-v2` | Converts PDF chunks into mathematical vectors (embeddings). |
+| **Interface** | **Streamlit** | Provides the interactive web application frontend. |
+
+---
 
 
+### How to Run Locally
 
+This project assumes you have **Python 3.10+** and **Ollama** installed.
 
+1.  **Clone the Repository:**
+    ```bash
+    git clone [https://github.com/](https://github.com/)[your-username]/[your-repo-name].git
+    cd [your-repo-name]
+    ```
 
-A secure, offline-capable Retrieval-Augmented Generation (RAG) pipeline built to analyze sensitive financial documents on consumer hardware using quantized Small Language Models (SLMs).
+2.  **Install Dependencies:**
+    ```bash
+    pip install -r requirements.txt
+    ```
 
+3.  **Prepare the LLM:**
+    * Ensure Ollama is running in the background.
+    * Download the required model:
+        ```bash
+        ollama run llama3.2:1b
+        ```
 
+4.  **Ingest Documents:**
+    * Place your `.pdf` documents in the `raw_pdfs/` folder.
+    * Build the vector database (this creates the `faiss_index` folder):
+        ```bash
+        python ingest.py
+        ```
 
-##### **Technical Architecture**
+5.  **Launch the Application:**
+    ```bash
+    streamlit run gui.py
+    ```
+    Your application will open automatically in your browser at `http://localhost:8501`.
 
-
-
-* **Orchestration Framework:** LangChain (Python)
-
-
-
-* **Inference Engine:** Ollama (running locally)
-
-
-
-* **Large Language Model:** Llama 3.2 (1B Parameters) – Chosen for low-latency edge performance.
-
-
-
-* **Embedding Model:** sentence-transformers/all-MiniLM-L6-v2 – HuggingFace local embeddings.
-
-
-
-* **Vector Database:** FAISS (Facebook AI Similarity Search) – For efficient similarity search.
-
-
-
-User Interface: Streamlit – Interactive chat interface with citation rendering.
-
-
-
-##### **Key Features (The "Why")**
-
-
-
-* **100% Data Privacy:** The entire pipeline runs locally. No data is sent to external APIs (OpenAI/Anthropic), making it compliant with strict data security standards.
-
-
-
-* **Zero-Cost Infrastructure:** Eliminates cloud compute costs by leveraging local CPU/RAM for inference.
-
-
-
-* **Latency Optimization:** optimized for "Edge AI" deployment using a quantized 1B model, ensuring rapid responses even on standard laptops.
-
-
-
-* **Hallucination Check:** Implements a retrieval-based citation system, ensuring every answer is grounded in specific document chunks (with page numbers).
-
-
-
-##### **Data Flow (The "How")**
-
-
-
-* **Ingestion:** PDF documents (e.g., Apple 10-K, Google Environmental Reports) are loaded and split into semantic chunks.
-
-
-
-* **Embedding:** Text chunks are converted into dense vector representations using all-MiniLM-L6-v2.
-
-
-
-* **Indexing:** Vectors are stored in a local FAISS index for high-speed retrieval.
-
-
-
-* **Retrieval:** User queries are converted to vectors; the system performs a similarity search to fetch the top k=6 relevant chunks.
-
-
-
-* **Generation:** The relevant context + user query are passed to the Llama 3.2 model to generate a natural language response with source attribution.
